@@ -1,0 +1,173 @@
+<ngx-spinner fullScreen="false" type="cube-transition"></ngx-spinner>
+<div class="row justify-content-center">
+  <h5>
+    {{
+      registered
+        ? "Вы зарегестрированы, ждите своей команды"
+        : "Войдите в свой аккаунт или зарегистрируйтесь чтобы продолжить"
+    }}
+  </h5>
+</div>
+<div class="row justify-content-center mb-3">
+  <h5>Ваша команда:</h5>
+  <small class="">Player 2</small>
+  <small class="">Player 2</small>
+  <small class="">Player 3</small>
+</div>
+<div class="row text-white">
+  <div class="col-12 col-md-6 col-lg-4">
+    <button
+      type="button"
+      class="btn btn-success p-2 mb-2 w-100"
+      data-bs-toggle="modal"
+      data-bs-target="#banksModal"
+    >
+      Банки
+    </button>
+  </div>
+</div>
+<div class="row text-white">
+  <div class="col-12 col-md-6 col-lg-4">
+    <button
+      type="button"
+      class="btn btn-success p-2 mb-2 w-100"
+      data-bs-toggle="modal"
+      data-bs-target="#jobTypesModal"
+    >
+      Биржа труда
+    </button>
+  </div>
+</div>
+<div class="row text-white">
+  <div class="col-12 col-md-6 col-lg-4">
+    <button
+      type="button"
+      class="btn btn-success p-2 mb-2 w-100"
+      data-bs-toggle="modal"
+      data-bs-target="#shopModal"
+    >
+      Магазин
+    </button>
+  </div>
+</div>
+<!-- Bank Modal -->
+<div
+  class="modal fade needs-validation background-container"
+  id="banksModal"
+  data-bs-backdrop="static"
+  tabindex="-1"
+  aria-labelledby="banksModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="gameLabel">Банки</h5>
+        <button
+          type="button"
+          class="btn-close btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body text-white">
+        <div *ngFor="let bank of banks" class="alert p-2 mb-2">
+          <div class="row">
+            <div class="col">{{ bank.name }}</div>
+            <div class="col-auto ms-auto">
+              <button type="button" class="btn btn-success">Действия</button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <div>Ставка по кредиту: {{ bank.creditRate * 100 }}%</div>
+              <div>Ставка по вкладу: {{ bank.depositRate * 100 }}%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Shop Modal -->
+<div
+  class="modal fade needs-validation background-container"
+  id="shopModal"
+  data-bs-backdrop="static"
+  tabindex="-1"
+  aria-labelledby="shopModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="gameLabel">Магазин</h5>
+        <button
+          type="button"
+          class="btn-close btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body text-white">
+        <div *ngFor="let item of items" class="alert shadow-sm p-2 mb-2">
+          <div class="row">
+            <div class="col">
+              <div>Товар: {{ item.name }}</div>
+              <div>Цена: {{ item.price }}</div>
+            </div>
+            <div class="col-auto ms-auto">
+              <button type="button" class="btn btn-success">Купить</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Job types Modal -->
+<div
+  class="modal fade needs-validation background-container"
+  id="jobTypesModal"
+  data-bs-backdrop="static"
+  tabindex="-1"
+  aria-labelledby="jobTypesLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="gameLabel">Биржа труда</h5>
+        <button
+          type="button"
+          class="btn-close btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div *ngFor="let jobType of jobTypes" class="alert mb-2 p-3 shadow">
+          <h5>{{ jobType.name }}</h5>
+          <hr class="m-0" />
+          <div
+            *ngFor="let job of jobType.jobList; let isLast = last"
+            class="row justify-content-center"
+          >
+            <div class="col my-auto">
+              <div>Название: {{ job.name }}</div>
+              <div>Зарплата: {{ job.salary }}</div>
+            </div>
+            <div class="col-auto ms-auto">
+              <button type="button" class="btn btn-success mt-2 mb-2">
+                Устроиться
+              </button>
+            </div>
+            <div *ngIf="!isLast" class="col-12">
+              <hr class="m-0" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

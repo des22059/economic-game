@@ -1,0 +1,265 @@
+<ngx-spinner fullScreen="false" type="cube-transition"></ngx-spinner>
+<div class="row justify-content-center">
+  <div class="col-12" [ngClass]="{ 'mb-3': games.length > 0 }">
+    <div class="row">
+      <div class="col">
+        <h3>Игры</h3>
+      </div>
+      <div class="col-auto ms-auto">
+        <button
+          class="btn btn-success"
+          type="button"
+          data-bs-toggle="modal"
+          data-bs-target="#gameModal"
+        >
+          Создать игру
+        </button>
+      </div>
+    </div>
+  </div>
+  <div *ngFor="let game of games" class="col-12">
+    <div class="alert alert-light">
+      <div class="row">
+        <div class="col mr-auto mb-3 mb-md-0">
+          <h5 class="mb-0">{{ game.name }}</h5>
+          <div><small>Сценарий: </small>{{ game.scenario.name }}</div>
+          <div><small>Статус: </small>{{ game.state }}</div>
+        </div>
+        <div *ngIf="game.state === 'CREATED'" class="col-auto">
+          <button
+            class="btn btn-secondary mb-2"
+            type="button"
+            data-bs-toggle="modal"
+            data-bs-target="#initGameModal"
+          >
+            Запустить сценарий
+          </button>
+        </div>
+        <div *ngIf="game.state === 'INITIATED'" class="col-auto">
+          <button
+            class="btn btn-secondary me-2 mb-2"
+            type="button"
+            data-bs-toggle="modal"
+            data-bs-target="#devideTeamsModal"
+          >
+            Разделить на команды
+          </button>
+          <button
+            class="btn btn-secondary me-2 mb-2"
+            type="button"
+            data-bs-toggle="modal"
+            data-bs-target="#qrModal"
+          >
+            Открыть QR-код
+          </button>
+          <button class="btn btn-success mb-2" type="button">Start game</button>
+        </div>
+      </div>
+      <!-- Init Game Modal -->
+      <div
+        class="modal fade needs-validation background-container"
+        id="initGameModal"
+        data-bs-backdrop="static"
+        tabindex="-1"
+        aria-labelledby="initGameModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="gameLabel">Запуск сценария</h5>
+              <button
+                type="button"
+                class="btn-close btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <div><small>Название:</small> {{ game.scenario.name }}</div>
+              {{ game.scenario | json }}
+            </div>
+            <div class="modal-footer">
+              <button
+                class="btn btn-success"
+                type="button"
+                (click)="initGame(game)"
+              >
+                Запустить
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- QR Modal -->
+      <div
+        class="modal fade needs-validation background-container"
+        id="qrModal"
+        data-bs-backdrop="static"
+        tabindex="-1"
+        aria-labelledby="qrModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="gameLabel">Игра: {{ game.name }}</h5>
+              <button
+                type="button"
+                class="btn-close btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body text-center">
+              <qrcode
+                class="my-qr"
+                colorLight="#f2e9e4"
+                [width]="2000"
+                [qrdata]="'http://localhost:4200/games/' + game.id"
+                [elementType]="'img'"
+                [errorCorrectionLevel]="'M'"
+              ></qrcode>
+            </div>
+            <div class="modal-footer">
+              <button
+                class="btn btn-success"
+                type="button"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+                [routerLink]="[game.id]"
+              >
+                Перейти к игре
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Devide teams Modal -->
+      <div
+        class="modal fade needs-validation background-container"
+        id="devideTeamsModal"
+        data-bs-backdrop="static"
+        tabindex="-1"
+        aria-labelledby="devideTeamsModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="gameLabel">Разделить на команды</h5>
+              <button
+                type="button"
+                class="btn-close btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">Вы уверены?</div>
+            <div class="modal-footer">
+              <button
+                class="btn btn-secondary"
+                type="button"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              >
+                Нет
+              </button>
+              <button
+                class="btn btn-success"
+                type="button"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+                (click)="devideTeams()"
+              >
+                Да, разделить
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Games Modal -->
+  <div
+    class="modal fade needs-validation background-container"
+    id="gameModal"
+    data-bs-backdrop="static"
+    tabindex="-1"
+    aria-labelledby="gameModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="gameLabel">Создать игру</h5>
+          <button
+            type="button"
+            class="btn-close btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form
+            class="form-inline"
+            [formGroup]="gameForm"
+            (ngSubmit)="addGame()"
+          >
+            <div class="form-group">
+              <label for="inputName" class="form-label">Название</label>
+              <input
+                type="text"
+                maxlength="50"
+                class="form-control"
+                [ngClass]="{ 'is-invalid': gameSubmitted && fg.name.errors }"
+                id="inputName"
+                formControlName="name"
+                placeholder="Название"
+                required
+              />
+              <div
+                *ngIf="gameSubmitted && fg.name.errors"
+                class="invalid-feedback"
+              >
+                <div *ngIf="fg.name.errors.required">Введите название</div>
+                <div *ngIf="fg.name.errors.maxlength">
+                  Максимальная длина названия 50 символов
+                </div>
+              </div>
+            </div>
+            <div class="form-group mt-2">
+              <label for="scriptSelect" class="form-label me-2">Сценарий</label>
+              <select
+                id="scriptSelect"
+                class="form-control"
+                [ngClass]="{
+                  'is-invalid': gameSubmitted && fg.scenarioId.value === null
+                }"
+                formControlName="scenarioId"
+              >
+                <option disabled selected [value]="null">
+                  Выберите сценарий
+                </option>
+                <option *ngFor="let script of scripts" [ngValue]="script.id">
+                  {{ script.name }}
+                </option>
+              </select>
+              <div
+                *ngIf="gameSubmitted && fg.scenarioId.value === null"
+                class="invalid-feedback"
+              >
+                <div *ngIf="fg.scenarioId.value === null">
+                  Выберите сценарий
+                </div>
+              </div>
+            </div>
+            <div class="form-group mt-3">
+              <button type="submit" class="btn btn-success">Создать</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

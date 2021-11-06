@@ -1,0 +1,15 @@
+.my-qr::ng-deep {
+    width: 100% !important;
+    height: 100% !important;
+    display: block !important;
+
+    .qrcode {
+        width: 100% !important;
+        height: 100% !important;
+        display: block !important;
+
+        img {
+            width: 100% !important;
+        }
+    }
+}

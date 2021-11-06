@@ -1,0 +1,134 @@
+<div class="row justify-content-center">
+  <div class="col-12 col-md-10 col-lg-6">
+    <div class="row mb-3">
+      <div class="col-12 text-center">
+        <h3>Регистрация</h3>
+      </div>
+    </div>
+    <form
+      class="form-inline"
+      [formGroup]="registerForm"
+      (ngSubmit)="onRegisterSubmit()"
+    >
+      <div class="form-group">
+        <label for="inputEmail" class="form-label">Почта</label>
+        <input
+          type="email"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.email.errors }"
+          id="inputEmail"
+          formControlName="email"
+          placeholder="Почта"
+          required
+        />
+        <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+          <div *ngIf="f.email.errors.required">Введите почту</div>
+          <div *ngIf="f.email.errors.email">Почта некорректна</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="inputFirstName" class="form-label">Имя</label>
+        <input
+          type="text"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }"
+          id="inputFirstName"
+          formControlName="firstName"
+          placeholder="Имя"
+          required
+        />
+        <div *ngIf="submitted && f.firstName.errors" class="invalid-feedback">
+          <div *ngIf="f.firstName.errors.required">Введите имя</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="inputLastName" class="form-label">Фамилия</label>
+        <input
+          type="text"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }"
+          id="inputLastName"
+          formControlName="lastName"
+          placeholder="Фамилия"
+          required
+        />
+        <div *ngIf="submitted && f.lastName.errors" class="invalid-feedback">
+          <div *ngIf="f.lastName.errors.required">Введите фамилию</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="inputLastName" class="form-label">Отчество</label>
+        <input
+          type="text"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.middleName.errors }"
+          id="inputLastName"
+          formControlName="middleName"
+          placeholder="Отчество"
+          required
+        />
+        <div *ngIf="submitted && f.middleName.errors" class="invalid-feedback">
+          <div *ngIf="f.middleName.errors.required">Введите отчество</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="inputPassword" class="form-label">Пароль</label>
+        <input
+          type="password"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.password.errors }"
+          id="inputPassword"
+          formControlName="password"
+          placeholder="Пароль"
+          required
+        />
+        <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+          <div *ngIf="f.password.errors.required">Введите пароль</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="inputConfirmPassword" class="form-label"
+          >Подтверждение пароля</label
+        >
+        <input
+          type="password"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }"
+          id="inputConfirmPassword"
+          formControlName="confirmPassword"
+          placeholder="Подтверждение пароля"
+          required
+        />
+        <div
+          *ngIf="submitted && f.confirmPassword.errors"
+          class="invalid-feedback"
+        >
+          <div *ngIf="f.confirmPassword.errors.required">
+            Подтвердите пароль
+          </div>
+          <div *ngIf="f.confirmPassword.errors.mustMatch">
+            Пароли должны совпадать
+          </div>
+        </div>
+      </div>
+      <div class="form-group mt-3">
+        <div class="row">
+          <div class="col mr-auto mb-2">
+            <button type="submit" class="btn btn-success">
+              Зарегистрироваться
+            </button>
+          </div>
+          <div class="col-auto mb-2">
+            <button
+              class="btn btn-danger"
+              routerLink="/login"
+              [queryParams]="{ returnUrl: returnUrl }"
+            >
+              Уже есть аккаунт?
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

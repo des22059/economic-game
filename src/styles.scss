@@ -1,1 +1,31 @@
-/* You can add global styles to this file, and also import other style files */
+body {
+    background-color: #4a4e69;
+}
+
+.navbar {
+    box-shadow: rgba(black, .075) 0px 0px 15px 8px;
+    background-color: #22223b;
+}
+
+.main-page {
+    background-color: #f2e9e4;
+    box-shadow: rgba(black, .075) 0px 0px 15px 8px;
+}
+
+.modal-content {
+    background-color: #f2e9e4;
+    
+    .modal-header {
+        border-bottom: 1px solid #4a4e69;
+    }
+
+    .modal-body {
+        .alert {
+            background-color: #fff;
+        }
+    }
+
+    .modal-footer {
+        border-top: 1px solid #4a4e69;
+    }
+}

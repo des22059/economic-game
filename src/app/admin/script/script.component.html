@@ -1,0 +1,718 @@
+<ngx-spinner fullScreen="false" type="cube-transition"></ngx-spinner>
+<div class="row justify-content-center">
+  <div class="col-12" [ngClass]="{ 'mb-3': scripts.length > 0 }">
+    <div class="row">
+      <div class="col">
+        <h3>Сценарии</h3>
+      </div>
+      <div class="col-auto ms-auto">
+        <button
+          class="btn btn-success"
+          type="button"
+          data-bs-toggle="modal"
+          data-bs-target="#scriptModal"
+        >
+          Создать сценарий
+        </button>
+      </div>
+    </div>
+  </div>
+  <div *ngFor="let script of scripts" class="col-12">
+    <div class="alert text-white shadow" style="background-color: #4a4e69">
+      <div class="row">
+        <div class="col mr-auto">
+          <h5 class="mb-0">{{ script.name }}</h5>
+        </div>
+        <div class="col-auto text-secondary">
+          <fa-icon
+            class="delete-icon"
+            [icon]="faTimes"
+            (click)="deleteScript(script.id)"
+          ></fa-icon>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Script Modal -->
+<div
+  class="modal fade needs-validation"
+  id="scriptModal"
+  data-bs-backdrop="static"
+  tabindex="-1"
+  aria-labelledby="scriptModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
+    <div class="modal-content" style="background-color: #4a4e69">
+      <div class="modal-header">
+        <h5 class="modal-title text-white" id="scriptModalLabel">
+          Создать сценарий
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="p-3 shadow" style="background-color: #f2e9e4">
+          <form
+            class="form-inline"
+            [formGroup]="scriptForm"
+            (ngSubmit)="onScriptSubmit()"
+          >
+            <div class="form-group row align-items-end">
+              <div class="col-6">
+                <label for="inputName" class="form-label">Название</label>
+                <input
+                  type="text"
+                  maxlength="50"
+                  class="form-control"
+                  [ngClass]="{
+                    'is-invalid': scriptSubmitted && fs.name.errors
+                  }"
+                  id="inputName"
+                  formControlName="name"
+                  placeholder="Название"
+                  required
+                />
+                <div
+                  *ngIf="scriptSubmitted && fs.name.errors"
+                  class="invalid-feedback"
+                >
+                  <div *ngIf="fs.name.errors.required">Введите название</div>
+                  <div *ngIf="fs.name.errors.maxlength">
+                    Максимальная длина названия 50 символов
+                  </div>
+                </div>
+              </div>
+              <div class="col-auto ms-auto">
+                <button type="submit" class="btn btn-success ps-5 pe-5">
+                  Создать
+                </button>
+              </div>
+            </div>
+            <hr />
+            <div class="row mt-3">
+              <div class="col-12 col-lg-3">
+                <h5>Банки</h5>
+                <button
+                  type="button"
+                  class="btn btn-success w-100 p-2 mb-3"
+                  data-bs-toggle="modal"
+                  data-bs-target="#bankModal"
+                >
+                  Добавить банк
+                </button>
+                <div
+                  *ngFor="let bank of banks"
+                  class="alert-light p-2 mb-2 rounded"
+                >
+                  <div>{{ bank.name }}</div>
+                  <div>
+                    <small
+                      >Ставка по кредиту: {{ bank.creditRate * 100 }}%</small
+                    >
+                  </div>
+                  <div>
+                    <small
+                      >Ставка по вкладу: {{ bank.depositRate * 100 }}%</small
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-lg-3 mt-2 mt-lg-0">
+                <div ckass="row">
+                  <div class="col-12 mb-3">
+                    <h5>Биржи труда</h5>
+                    <button
+                      type="button"
+                      class="btn btn-success w-100 p-2 mb-3"
+                      data-bs-toggle="modal"
+                      data-bs-target="#jobTypeModal"
+                    >
+                      Добавить биржу труда
+                    </button>
+                    <div
+                      *ngFor="let jobType of jobTypes"
+                      class="alert-light p-2 mb-2 rounded"
+                    >
+                      <div>{{ jobType.name }}</div>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <h5>Работа{{ jobTypes.length === 0 ? "*" : "" }}</h5>
+                    <small *ngIf="jobTypes.length === 0" class=""
+                      >*Сначала добавьте биржу труда</small
+                    >
+                    <button
+                      type="button"
+                      class="btn btn-success w-100 p-2 mb-3"
+                      data-bs-toggle="modal"
+                      data-bs-target="#jobModal"
+                      [disabled]="jobTypes.length === 0"
+                    >
+                      Добавить работу
+                    </button>
+                    <div
+                      *ngFor="let job of jobs"
+                      class="alert-light p-2 mb-2 rounded"
+                    >
+                      <div>{{ job.name }}</div>
+                      <div>
+                        <small>Биржа труда: {{ job.jobTypeName }}</small>
+                      </div>
+                      <div>
+                        <small>Зарплата: {{ job.salary }}</small>
+                      </div>
+                      <div>
+                        <small
+                          >Ручное подтверждение:
+                          {{
+                            job.salaryConfirmationType === "NONE"
+                              ? "нет"
+                              : "через модератора"
+                          }}</small
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-lg-3 mt-2 mt-lg-0">
+                <h5>Товары</h5>
+                <button
+                  type="button"
+                  class="btn btn-success w-100 p-2 mb-3"
+                  data-bs-toggle="modal"
+                  data-bs-target="#itemModal"
+                >
+                  Добавить товар
+                </button>
+                <div
+                  *ngFor="let item of items"
+                  class="alert-light p-2 mb-2 rounded"
+                >
+                  <div>{{ item.name }}</div>
+                  <div>
+                    <small>Цена: {{ item.price }}</small>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-lg-3 mt-2 mt-lg-0">
+                <h5>Периоды</h5>
+                <button
+                  type="button"
+                  class="btn btn-success w-100 p-2 mb-3"
+                  data-bs-toggle="modal"
+                  data-bs-target="#periodModal"
+                >
+                  Добавить период
+                </button>
+                <div
+                  *ngFor="let period of periods; let pos = index"
+                  class="alert-light p-2 mb-2"
+                >
+                  <div class="row">
+                    <div class="col me-auto">
+                      <div>{{ period.duration }} мин.</div>
+                      <div>
+                        <small
+                          >Ручной старт:
+                          {{ period.manualStart ? "да" : "нет" }}</small
+                        >
+                      </div>
+                    </div>
+                    <div
+                      class="
+                        col-auto
+                        d-flex
+                        flex-column
+                        justify-content-between
+                      "
+                    >
+                      <label
+                        type="button"
+                        *ngIf="pos !== 0"
+                        (click)="swapOrder(pos - 1, pos)"
+                      >
+                        <h3><fa-icon [icon]="faSortUp"></fa-icon></h3>
+                      </label>
+                      <label
+                        type="button"
+                        *ngIf="pos !== periods.length - 1"
+                        (click)="swapOrder(pos, pos + 1)"
+                      >
+                        <h3><fa-icon [icon]="faSortDown"></fa-icon></h3>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Bank Modal -->
+<div
+  class="modal fade needs-validation background-container"
+  id="bankModal"
+  data-bs-backdrop="static"
+  tabindex="-1"
+  aria-labelledby="bankModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="bankModalLabel">Добавить банк</h5>
+        <button
+          type="button"
+          class="btn-close btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form class="form-inline" [formGroup]="bankForm" (ngSubmit)="addBank()">
+          <div class="form-group">
+            <label for="inputName" class="form-label">Название</label>
+            <input
+              type="text"
+              maxlength="50"
+              class="form-control"
+              [ngClass]="{ 'is-invalid': bankSubmitted && fb.name.errors }"
+              id="inputName"
+              formControlName="name"
+              placeholder="Название"
+              required
+            />
+            <div
+              *ngIf="bankSubmitted && fb.name.errors"
+              class="invalid-feedback"
+            >
+              <div *ngIf="fb.name.errors.required">Введите название</div>
+              <div *ngIf="fb.name.errors.maxlength">
+                Максимальная длина названия 50 символов
+              </div>
+            </div>
+          </div>
+          <div class="form-group mt-2">
+            <label for="inputCreditAvailable" class="form-label me-2"
+              >Кредит доступен</label
+            >
+            <input
+              type="checkbox"
+              [ngClass]="{
+                'is-invalid': bankSubmitted && fb.creditAvailable.errors
+              }"
+              id="inputCreditAvailable"
+              formControlName="creditAvailable"
+            />
+          </div>
+          <div class="form-group">
+            <label for="inputCreditRate" class="form-label"
+              >Ставка по кредиту(%)</label
+            >
+            <input
+              type="number"
+              min="0"
+              max="100"
+              class="form-control"
+              [ngClass]="{
+                'is-invalid': bankSubmitted && fb.creditRate.errors
+              }"
+              id="inputCreditRate"
+              formControlName="creditRate"
+              placeholder="Ставка по кредиту"
+              required
+            />
+            <div
+              *ngIf="bankSubmitted && fb.creditRate.errors"
+              class="invalid-feedback"
+            >
+              <div *ngIf="fb.creditRate.errors.required">
+                Введите ставку по кредиту
+              </div>
+              <div *ngIf="fb.creditRate.errors.min || fb.creditRate.errors.max">
+                Введите значение от 0 до 100
+              </div>
+            </div>
+          </div>
+          <div class="form-group mt-2">
+            <label for="inputDepositAvailable" class="form-label me-2"
+              >Вклад доступен</label
+            >
+            <input
+              type="checkbox"
+              [ngClass]="{
+                'is-invalid': bankSubmitted && fb.depositAvailable.errors
+              }"
+              id="inputDepositAvailable"
+              formControlName="depositAvailable"
+            />
+          </div>
+          <div class="form-group">
+            <label for="inputDepositRate" class="form-label"
+              >Ставка по вкладу(%)</label
+            >
+            <input
+              type="number"
+              min="0"
+              max="100"
+              class="form-control"
+              [ngClass]="{
+                'is-invalid': bankSubmitted && fb.depositRate.errors
+              }"
+              id="inputDepositRate"
+              formControlName="depositRate"
+              placeholder="Ставка по вкладу"
+              required
+            />
+            <div
+              *ngIf="bankSubmitted && fb.depositRate.errors"
+              class="invalid-feedback"
+            >
+              <div *ngIf="fb.depositRate.errors.required">
+                Введите ставку по вкладу
+              </div>
+              <div
+                *ngIf="fb.depositRate.errors.min || fb.depositRate.errors.max"
+              >
+                Введите значение от 0 до 100
+              </div>
+            </div>
+          </div>
+          <div class="form-group mt-3">
+            <button type="submit" class="btn btn-success">Создать</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Jobs Type Modal -->
+<div
+  class="modal fade needs-validation background-container"
+  id="jobTypeModal"
+  data-bs-backdrop="static"
+  tabindex="-1"
+  aria-labelledby="jobTypeModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="jobTypeLabel">Добавить биржу труда</h5>
+        <button
+          type="button"
+          class="btn-close btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form
+          class="form-inline"
+          [formGroup]="jobTypeForm"
+          (ngSubmit)="addJobType()"
+        >
+          <div class="form-group">
+            <label for="inputName" class="form-label">Название</label>
+            <input
+              type="text"
+              maxlength="50"
+              class="form-control"
+              [ngClass]="{ 'is-invalid': jobTypeSubmitted && fjt.name.errors }"
+              id="inputName"
+              formControlName="name"
+              placeholder="Название"
+              required
+            />
+            <div
+              *ngIf="jobTypeSubmitted && fjt.name.errors"
+              class="invalid-feedback"
+            >
+              <div *ngIf="fjt.name.errors.required">Введите название</div>
+              <div *ngIf="fjt.name.errors.maxlength">
+                Максимальная длина названия 50 символов
+              </div>
+            </div>
+          </div>
+          <div class="form-group mt-3">
+            <button type="submit" class="btn btn-success">Создать</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Jobs Modal -->
+<div
+  class="modal fade needs-validation background-container"
+  id="jobModal"
+  data-bs-backdrop="static"
+  tabindex="-1"
+  aria-labelledby="jobModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="jobLabel">Добавить работу</h5>
+        <button
+          type="button"
+          class="btn-close btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form class="form-inline" [formGroup]="jobForm" (ngSubmit)="addJob()">
+          <div class="form-group">
+            <label for="inputName" class="form-label">Название</label>
+            <input
+              type="text"
+              maxlength="50"
+              class="form-control"
+              [ngClass]="{ 'is-invalid': jobSubmitted && fj.name.errors }"
+              id="inputName"
+              formControlName="name"
+              placeholder="Название"
+              required
+            />
+            <div
+              *ngIf="jobSubmitted && fj.name.errors"
+              class="invalid-feedback"
+            >
+              <div *ngIf="fj.name.errors.required">Введите название</div>
+              <div *ngIf="fj.name.errors.maxlength">
+                Максимальная длина названия 50 символов
+              </div>
+            </div>
+          </div>
+          <div class="form-group mt-2">
+            <label for="inputSalary" class="form-label">Зарплата</label>
+            <input
+              type="number"
+              min="0"
+              class="form-control"
+              [ngClass]="{
+                'is-invalid': jobSubmitted && fj.salary.errors
+              }"
+              id="inputSalary"
+              formControlName="salary"
+              placeholder="Зарплата"
+              required
+            />
+            <div
+              *ngIf="jobSubmitted && fj.salary.errors"
+              class="invalid-feedback"
+            >
+              <div *ngIf="fj.salary.errors.required">Введите зарплату</div>
+              <div *ngIf="fj.salary.errors.min">Введите значение больше 0</div>
+            </div>
+          </div>
+          <div class="form-group mt-2">
+            <label for="inputsalaryConfirmationType" class="form-label me-2"
+              >Ручное подтверждение</label
+            >
+            <input
+              type="checkbox"
+              [ngClass]="{
+                'is-invalid': jobSubmitted && fj.salaryConfirmationType.errors
+              }"
+              id="inputsalaryConfirmationType"
+              formControlName="salaryConfirmationType"
+            />
+          </div>
+          <div class="form-group">
+            <label for="jobTypeSelect" class="form-label me-2"
+              >Биржа труда</label
+            >
+            <select
+              id="jobTypeSelect"
+              class="form-control"
+              [ngClass]="{
+                'is-invalid': jobSubmitted && fj.jobTypeName.value === null
+              }"
+              formControlName="jobTypeName"
+            >
+              <option disabled selected [value]="null">
+                Выберите биржу труда
+              </option>
+              <option *ngFor="let jobType of jobTypes" [ngValue]="jobType">
+                {{ jobType.name }}
+              </option>
+            </select>
+            <div
+              *ngIf="jobSubmitted && fj.jobTypeName.value === null"
+              class="invalid-feedback"
+            >
+              <div *ngIf="fj.jobTypeName.value === null">
+                Выберите биржу труда
+              </div>
+            </div>
+          </div>
+          <div class="form-group mt-3">
+            <button type="submit" class="btn btn-success">Создать</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Items Modal -->
+<div
+  class="modal fade needs-validation background-container"
+  id="itemModal"
+  data-bs-backdrop="static"
+  tabindex="-1"
+  aria-labelledby="itemModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="itemLabel">Добаить товар</h5>
+        <button
+          type="button"
+          class="btn-close btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form class="form-inline" [formGroup]="itemForm" (ngSubmit)="addItem()">
+          <div class="form-group">
+            <label for="inputName" class="form-label">Название</label>
+            <input
+              type="text"
+              maxlength="50"
+              class="form-control"
+              [ngClass]="{ 'is-invalid': itemSubmitted && fi.name.errors }"
+              id="inputName"
+              formControlName="name"
+              placeholder="Название"
+              required
+            />
+            <div
+              *ngIf="itemSubmitted && fi.name.errors"
+              class="invalid-feedback"
+            >
+              <div *ngIf="fi.name.errors.required">Введите название</div>
+              <div *ngIf="fi.name.errors.maxlength">
+                Максимальная длина названия 50 символов
+              </div>
+            </div>
+          </div>
+          <div class="form-group mt-2">
+            <label for="inputPrice" class="form-label">Цена</label>
+            <input
+              type="number"
+              min="0"
+              class="form-control"
+              [ngClass]="{
+                'is-invalid': itemSubmitted && fi.price.errors
+              }"
+              id="inputPrice"
+              formControlName="price"
+              placeholder="Цена"
+              required
+            />
+            <div
+              *ngIf="itemSubmitted && fi.price.errors"
+              class="invalid-feedback"
+            >
+              <div *ngIf="fi.price.errors.required">Введите цену</div>
+              <div *ngIf="fi.price.errors.min">Введите значение больше 0</div>
+            </div>
+          </div>
+          <div class="form-group mt-3">
+            <button type="submit" class="btn btn-success">Создать</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Periods Modal -->
+<div
+  class="modal fade needs-validation background-container"
+  id="periodModal"
+  data-bs-backdrop="static"
+  tabindex="-1"
+  aria-labelledby="periodModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="jobLabel">Добавить период</h5>
+        <button
+          type="button"
+          class="btn-close btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form
+          class="form-inline"
+          [formGroup]="periodForm"
+          (ngSubmit)="addPeriod()"
+        >
+          <div class="form-group mt-2">
+            <label for="inputDuration" class="form-label"
+              >Длительность(мин)</label
+            >
+            <input
+              type="number"
+              min="0"
+              class="form-control"
+              [ngClass]="{
+                'is-invalid': periodSubmitted && fp.duration.errors
+              }"
+              id="inputDuration"
+              formControlName="duration"
+              placeholder="Длительность"
+              required
+            />
+            <div
+              *ngIf="periodSubmitted && fp.duration.errors"
+              class="invalid-feedback"
+            >
+              <div *ngIf="fp.duration.errors.required">
+                Введите длительность
+              </div>
+              <div *ngIf="fp.duration.errors.min">
+                Введите значение больше 0
+              </div>
+            </div>
+          </div>
+          <div class="form-group mt-2">
+            <label for="inputManualStart" class="form-label me-2"
+              >Ручной старт</label
+            >
+            <input
+              type="checkbox"
+              [ngClass]="{
+                'is-invalid': periodSubmitted && fp.manualStart.errors
+              }"
+              id="inputManualStart"
+              formControlName="manualStart"
+            />
+          </div>
+          <div class="form-group mt-3">
+            <button type="submit" class="btn btn-success">Создать</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

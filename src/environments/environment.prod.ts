@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: false,
+  authenticationServerUrl: 'https://shrouded-anchorage-13303.herokuapp.com'
 };
